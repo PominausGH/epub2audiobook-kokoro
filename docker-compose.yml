@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  epub2audiobook:
+    build: .
+    container_name: epub2audiobook
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      # Persistent storage for uploads and output
+      - ./data/uploads:/data/uploads
+      - ./data/output:/data/output
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-change-this-in-production}
+      - FLASK_ENV=production
+    # Resource limits (adjust based on your server)
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+# Optional: Add reverse proxy for HTTPS
+#  nginx:
+#    image: nginx:alpine
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+#      - ./certs:/etc/nginx/certs:ro
+#    depends_on:
+#      - epub2audiobook

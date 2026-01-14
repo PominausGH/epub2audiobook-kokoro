@@ -1,360 +1,298 @@
-<div align="center">
+# ePub to Audiobook Converter
 
-# `Agent Zero`
+A free, private, offline tool that converts DRM-free ePub files into high-quality audiobooks using **traditional (non-neural) text-to-speech engines**.
 
-<p align="center">
-    <a href="https://trendshift.io/repositories/11745" target="_blank"><img src="https://trendshift.io/api/badge/repositories/11745" alt="frdel%2Fagent-zero | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</p>
+## Features
 
-[![Agent Zero Website](https://img.shields.io/badge/Website-agent--zero.ai-0A192F?style=for-the-badge&logo=vercel&logoColor=white)](https://agent-zero.ai) [![Thanks to Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Thanks%20to%20Sponsors-FF69B4?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/agent0ai) [![Follow on X](https://img.shields.io/badge/X-Follow-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/Agent0ai) [![Join our Discord](https://img.shields.io/badge/Discord-Join%20our%20server-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/B8KZKNsPpj) [![Subscribe on YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@AgentZeroFW) [![Connect on LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jan-tomasek/) [![Follow on Warpcast](https://img.shields.io/badge/Warpcast-Follow-5A32F3?style=for-the-badge)](https://warpcast.com/agent-zero) 
+- **100% Offline** - No internet required after installation
+- **Privacy-First** - Your books never leave your computer
+- **Cross-Platform** - Works on Windows, macOS, and Linux
+- **Traditional TTS** - Uses reliable, non-AI speech synthesis:
+  - Windows: Microsoft SAPI5 voices
+  - macOS: NSSpeechSynthesizer
+  - Linux: espeak-ng
+- **Chapter Support** - M4B files with proper chapter markers
+- **Metadata Embedding** - Title, author, and cover image preserved
+- **Simple GUI** - Easy-to-use interface, no technical knowledge required
+- **Command-Line Mode** - For automation and scripting
 
+## Screenshots
 
-## Documentation:
-
-[Introduction](#a-personal-organic-agentic-framework-that-grows-and-learns-with-you) •
-[Installation](./docs/installation.md) •
-[Development](./docs/development.md) •
-[Extensibility](./docs/extensibility.md) •
-[Connectivity](./docs/connectivity.md) •
-[How to update](./docs/installation.md#how-to-update-agent-zero) •
-[Documentation](./docs/README.md) •
-[Usage](./docs/usage.md)
-
-Or see DeepWiki generated documentation:
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/agent0ai/agent-zero)
-
-</div>
-
-
-<div align="center">
-
-> ### 🚨 **PROJECTS!** 🚨
-Agent Zero now supports **Projects** – isolated workspaces with their own prompts, files, memory, and secrets, so you can create dedicated setups for each use case without mixing contexts.
-</div>
-
-
-
-[![Showcase](/docs/res/showcase-thumb.png)](https://youtu.be/lazLNcEYsiQ)
-
-
-
-## A personal, organic agentic framework that grows and learns with you
-
-
-
-- Agent Zero is not a predefined agentic framework. It is designed to be dynamic, organically growing, and learning as you use it.
-- Agent Zero is fully transparent, readable, comprehensible, customizable, and interactive.
-- Agent Zero uses the computer as a tool to accomplish its (your) tasks.
-
-# 💡 Key Features
-
-1. **General-purpose Assistant**
-
-- Agent Zero is not pre-programmed for specific tasks (but can be). It is meant to be a general-purpose personal assistant. Give it a task, and it will gather information, execute commands and code, cooperate with other agent instances, and do its best to accomplish it.
-- It has a persistent memory, allowing it to memorize previous solutions, code, facts, instructions, etc., to solve tasks faster and more reliably in the future.
-
-![Agent 0 Working](/docs/res/ui-screen-2.png)
-
-2. **Computer as a Tool**
-
-- Agent Zero uses the operating system as a tool to accomplish its tasks. It has no single-purpose tools pre-programmed. Instead, it can write its own code and use the terminal to create and use its own tools as needed.
-- The only default tools in its arsenal are online search, memory features, communication (with the user and other agents), and code/terminal execution. Everything else is created by the agent itself or can be extended by the user.
-- Tool usage functionality has been developed from scratch to be the most compatible and reliable, even with very small models.
-- **Default Tools:** Agent Zero includes tools like knowledge, code execution, and communication.
-- **Creating Custom Tools:** Extend Agent Zero's functionality by creating your own custom tools.
-- **Instruments:** Instruments are a new type of tool that allow you to create custom functions and procedures that can be called by Agent Zero.
-
-3. **Multi-agent Cooperation**
-
-- Every agent has a superior agent giving it tasks and instructions. Every agent then reports back to its superior.
-- In the case of the first agent in the chain (Agent 0), the superior is the human user; the agent sees no difference.
-- Every agent can create its subordinate agent to help break down and solve subtasks. This helps all agents keep their context clean and focused.
-
-![Multi-agent](docs/res/physics.png)
-![Multi-agent 2](docs/res/physics-2.png)
-
-4. **Completely Customizable and Extensible**
-
-- Almost nothing in this framework is hard-coded. Nothing is hidden. Everything can be extended or changed by the user.
-- The whole behavior is defined by a system prompt in the **prompts/default/agent.system.md** file. Change this prompt and change the framework dramatically.
-- The framework does not guide or limit the agent in any way. There are no hard-coded rails that agents have to follow.
-- Every prompt, every small message template sent to the agent in its communication loop can be found in the **prompts/** folder and changed.
-- Every default tool can be found in the **python/tools/** folder and changed or copied to create new predefined tools.
-
-![Prompts](/docs/res/prompts.png)
-
-5. **Communication is Key**
-
-- Give your agent a proper system prompt and instructions, and it can do miracles.
-- Agents can communicate with their superiors and subordinates, asking questions, giving instructions, and providing guidance. Instruct your agents in the system prompt on how to communicate effectively.
-- The terminal interface is real-time streamed and interactive. You can stop and intervene at any point. If you see your agent heading in the wrong direction, just stop and tell it right away.
-- There is a lot of freedom in this framework. You can instruct your agents to regularly report back to superiors asking for permission to continue. You can instruct them to use point-scoring systems when deciding when to delegate subtasks. Superiors can double-check subordinates' results and dispute. The possibilities are endless.
-
-## 🚀 Things you can build with Agent Zero
-
-- **Development Projects** - `"Create a React dashboard with real-time data visualization"`
-
-- **Data Analysis** - `"Analyze last quarter's NVIDIA sales data and create trend reports"`
-
-- **Content Creation** - `"Write a technical blog post about microservices"`
-
-- **System Admin** - `"Set up a monitoring system for our web servers"`
-
-- **Research** - `"Gather and summarize five recent AI papers about CoT prompting"`
-
-
-
-# ⚙️ Installation
-
-Click to open a video to learn how to install Agent Zero:
-
-[![Easy Installation guide](/docs/res/easy_ins_vid.png)](https://www.youtube.com/watch?v=w5v5Kjx51hs)
-
-A detailed setup guide for Windows, macOS, and Linux with a video can be found in the Agent Zero Documentation at [this page](./docs/installation.md).
-
-### ⚡ Quick Start
-
-```bash
-# Pull and run with Docker
-
-docker pull agent0ai/agent-zero
-docker run -p 50001:80 agent0ai/agent-zero
-
-# Visit http://localhost:50001 to start
+```
+┌──────────────────────────────────────────────────────────┐
+│         ePub to Audiobook Converter                      │
+│              Using: SAPI5 (Windows)                      │
+├──────────────────────────────────────────────────────────┤
+│ ePub File                          │ Chapters Preview    │
+│ [C:\Books\MyBook.epub] [Browse...] │ 1. Introduction     │
+│                                    │ 2. Chapter One      │
+│ Book Information                   │ 3. Chapter Two      │
+│ Title:  My Great Book              │ ...                 │
+│ Author: John Smith                 │                     │
+│ Chapters: 15                       │                     │
+│ Est. Duration: ~4h 30m             │                     │
+│                                    │                     │
+│ Voice Settings                     │                     │
+│ Voice: [Microsoft David ▼] [Test]  │                     │
+│ Speed: ████████░░ 150 WPM          │                     │
+│ Volume: ██████████ 100%            │                     │
+│                                    ├────────────────────┤
+│ Output Settings                    │ Progress            │
+│ Format: [M4B with chapters ▼]      │ ████████░░ 80%     │
+│ Quality: [Medium (96 kbps) ▼]      │ Converting Ch.12... │
+│ ☑ Announce chapter titles          │                     │
+│ ☑ Normalize audio volume           │                     │
+├──────────────────────────────────────────────────────────┤
+│        [Convert to Audiobook]        [Cancel]            │
+└──────────────────────────────────────────────────────────┘
 ```
 
-## 🐳 Fully Dockerized, with Speech-to-Text and TTS
+## Installation
 
-![Settings](docs/res/settings-page-ui.png)
+### Option 1: Docker (Recommended for Servers)
 
-- Customizable settings allow users to tailor the agent's behavior and responses to their needs.
-- The Web UI output is very clean, fluid, colorful, readable, and interactive; nothing is hidden.
-- You can load or save chats directly within the Web UI.
-- The same output you see in the terminal is automatically saved to an HTML file in **logs/** folder for every session.
+The easiest way to run as a web service:
 
-![Time example](/docs/res/time_example.jpg)
+```bash
+# Clone and start
+git clone https://github.com/yourusername/epub2audiobook.git
+cd epub2audiobook
 
-- Agent output is streamed in real-time, allowing users to read along and intervene at any time.
-- No coding is required; only prompting and communication skills are necessary.
-- With a solid system prompt, the framework is reliable even with small models, including precise tool usage.
+# Build and run
+docker-compose up -d
 
-## 👀 Keep in Mind
+# Open in browser
+# http://localhost:5000
+```
 
-1. **Agent Zero Can Be Dangerous!**
+Or with make:
+```bash
+make build
+make run
+```
 
-- With proper instruction, Agent Zero is capable of many things, even potentially dangerous actions concerning your computer, data, or accounts. Always run Agent Zero in an isolated environment (like Docker) and be careful what you wish for.
+Docker provides:
+- Web interface accessible from any device
+- No local dependencies needed
+- Works on any server, NAS, or VPS
+- Uses espeak-ng + ffmpeg (pre-installed)
 
-2. **Agent Zero Is Prompt-based.**
+### Option 2: Download Pre-built Release
 
-- The whole framework is guided by the **prompts/** folder. Agent guidelines, tool instructions, messages, utility AI functions, it's all there.
+Download the latest release for your platform from the Releases page.
 
+### Option 3: Run from Source
 
-## 📚 Read the Documentation
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/epub2audiobook.git
+   cd epub2audiobook
+   ```
 
-| Page | Description |
-|-------|-------------|
-| [Installation](./docs/installation.md) | Installation, setup and configuration |
-| [Usage](./docs/usage.md) | Basic and advanced usage |
-| [Development](./docs/development.md) | Development and customization |
-| [Extensibility](./docs/extensibility.md) | Extending Agent Zero |
-| [Connectivity](./docs/connectivity.md) | External API endpoints, MCP server connections, A2A protocol |
-| [Architecture](./docs/architecture.md) | System design and components |
-| [Contributing](./docs/contribution.md) | How to contribute |
-| [Troubleshooting](./docs/troubleshooting.md) | Common issues and their solutions |
+2. **Create a virtual environment (recommended):**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/macOS
+   venv\Scripts\activate     # Windows
+   ```
 
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## 🎯 Changelog
+4. **Install platform-specific TTS (Linux only):**
+   ```bash
+   # Debian/Ubuntu
+   sudo apt install espeak-ng
 
-### v0.9.7 - Projects
-[Release video](https://youtu.be/RrTDp_v9V1c)
-- Projects management
-    - Support for custom instructions
-    - Integration with memory, knowledge, files
-    - Project specific secrets 
-- New Welcome screen/Dashboard
-- New Wait tool
-- Subordinate agent configuration override support
-- Support for multiple documents at once in document_query_tool
-- Improved context on interventions
-- Openrouter embedding support
-- Frontend components refactor and polishing
-- SSH metadata output fix
-- Support for windows powershell in local TTY utility
-- More efficient selective streaming for LLMs
-- UI output length limit improvements
+   # Fedora
+   sudo dnf install espeak-ng
 
+   # Arch
+   sudo pacman -S espeak-ng
+   ```
 
+5. **Install ffmpeg (optional, for M4B with chapters):**
+   ```bash
+   # Debian/Ubuntu
+   sudo apt install ffmpeg
 
-### v0.9.6 - Memory Dashboard
-[Release video](https://youtu.be/sizjAq2-d9s)
-- Memory Management Dashboard
-- Kali update
-- Python update + dual installation
-- Browser Use update
-- New login screen
-- LiteLLM retry on temporary errors
-- Github Copilot provider support
+   # macOS
+   brew install ffmpeg
 
+   # Windows - download from https://ffmpeg.org/download.html
+   ```
 
-### v0.9.5 - Secrets
-[Release video](https://www.youtube.com/watch?v=VqxUdt7pjd8)
-- Secrets management - agent can use credentials without seeing them
-- Agent can copy paste messages and files without rewriting them
-- LiteLLM global configuration field
-- Custom HTTP headers field for browser agent
-- Progressive web app support
-- Extra model params support for JSON
-- Short IDs for files and memories to prevent LLM errors
-- Tunnel component frontend rework
-- Fix for timezone change bug
-- Notifications z-index fix
+6. **Run the application:**
+   ```bash
+   python main.py
+   ```
 
-### v0.9.4 - Connectivity, UI
-[Release video](https://www.youtube.com/watch?v=C2BAdDOduIc)
-- External API endpoints
-- Streamable HTTP MCP A0 server
-- A2A (Agent to Agent) protocol - server+client
-- New notifications system
-- New local terminal interface for stability
-- Rate limiter integration to models
-- Delayed memory recall
-- Smarter autoscrolling in UI
-- Action buttons in messages
-- Multiple API keys support
-- Download streaming
-- Tunnel URL QR code
-- Internal fixes and optimizations
+## Usage
 
-### v0.9.3 - Subordinates, memory, providers Latest
-[Release video](https://www.youtube.com/watch?v=-LfejFWL34k)
-- Faster startup/restart
-- Subordinate agents can have dedicated prompts, tools and system extensions
-- Streamable HTTP MCP server support
-- Memory loading enhanced by AI filter
-- Memory AI consolidation when saving memories
-- Auto memory system configuration in settings
-- LLM providers available are set by providers.yaml configuration file
-- Venice.ai LLM provider supported
-- Initial agent message for user + as example for LLM
-- Docker build support for local images
-- File browser fix
+### GUI Mode
 
+Simply run the application without arguments:
+```bash
+python main.py
+```
 
-### v0.9.2 - Kokoro TTS, Attachments
-[Release video](https://www.youtube.com/watch?v=sPot_CAX62I)
+1. Click **Browse** to select an ePub file
+2. Review the book information and chapters
+3. Select a voice and adjust speed/volume
+4. Choose output format (M4B recommended)
+5. Click **Convert to Audiobook**
+6. Wait for conversion to complete
 
-- Kokoro text-to-speech integration
-- New message attachments system
-- Minor updates: log truncation, hyperlink targets, component examples, api cleanup
+### Command-Line Mode
 
+```bash
+# Basic conversion
+python main.py book.epub output.m4b
 
-### v0.9.1 - LiteLLM, UI improvements
-[Release video](https://youtu.be/crwr0M4Spcg)
-- Langchain replaced with LiteLLM
-    - Support for reasoning models streaming
-    - Support for more providers
-    - Openrouter set as default instead of OpenAI
-- UI improvements
-    - New message grouping system
-    - Communication smoother and more efficient
-    - Collapsible messages by type
-    - Code execution tool output improved
-    - Tables and code blocks scrollable
-    - More space efficient on mobile
-- Streamable HTTP MCP servers support
-- LLM API URL added to models config for Azure, local and custom providers
-    
+# Specify voice and speed
+python main.py book.epub output.m4b --voice "David" --speed 160
 
-### v0.9.0 - Agent roles, backup/restore
-[Release video](https://www.youtube.com/watch?v=rMIe-TC6H-k)
-- subordinate agents can use prompt profiles for different roles
-- backup/restore functionality for easier upgrades
-- security and bug fixes
+# List available voices
+python main.py --list-voices
 
-### v0.8.7 - Formatting, Document RAG Latest
-[Release video](https://youtu.be/OQJkfofYbus)
-- markdown rendering in responses
-- live response rendering
-- document Q&A tool
+# Help
+python main.py --help
+```
 
-### v0.8.6 - Merge and update
-[Release video](https://youtu.be/l0qpK3Wt65A)
-- Merge with Hacking Edition
-- browser-use upgrade and integration re-work
-- tunnel provider switch
+### Output Formats
 
-### v0.8.5 - **MCP Server + Client**
-[Release video](https://youtu.be/pM5f4Vz3_IQ)
+| Format | Description | Chapters | Best For |
+|--------|-------------|----------|----------|
+| **M4B** | Single file with embedded chapters | ✅ Native | Audiobook apps, iTunes |
+| **MP3** | Single file + CUE sheet | ✅ Via CUE | General compatibility |
+| **MP3 Chapters** | Separate file per chapter | ✅ Folders | Manual organization |
 
-- Agent Zero can now act as MCP Server
-- Agent Zero can use external MCP servers as tools
+## Building Standalone Executables
 
-### v0.8.4.1 - 2
-Default models set to gpt-4.1
-- Code execution tool improvements
-- Browser agent improvements
-- Memory improvements
-- Various bugfixes related to context management
-- Message formatting improvements
-- Scheduler improvements
-- New model provider
-- Input tool fix
-- Compatibility and stability improvements
+To create a distributable executable:
 
-### v0.8.4
-[Release video](https://youtu.be/QBh_h_D_E24)
+```bash
+# Install PyInstaller
+pip install pyinstaller
 
-- **Remote access (mobile)**
+# Build (folder mode - faster startup)
+python build.py
 
-### v0.8.3.1
-[Release video](https://youtu.be/AGNpQ3_GxFQ)
+# Build (single file mode - more portable)
+python build.py --onefile
 
-- **Automatic embedding**
+# Create distribution package
+python build.py --dist
+```
 
+The built executable will be in the `dist/` folder.
 
-### v0.8.3
-[Release video](https://youtu.be/bPIZo0poalY)
+## Project Structure
 
-- ***Planning and scheduling***
+```
+epub2audiobook/
+├── main.py              # Desktop app entry point
+├── requirements.txt     # Python dependencies
+├── Dockerfile           # Docker image definition
+├── docker-compose.yml   # Docker deployment config
+├── Makefile             # Convenience commands
+├── core/
+│   ├── epub_parser.py   # ePub parsing and text extraction
+│   └── text_cleaner.py  # Text normalization for TTS
+├── tts/
+│   └── engine.py        # TTS engine wrapper (pyttsx3)
+├── audio/
+│   ├── processor.py     # Audio manipulation (pydub)
+│   └── m4b_creator.py   # M4B creation with chapters
+├── gui/                 # Desktop GUI (PyQt6)
+│   ├── main_window.py
+│   └── converter_worker.py
+└── web/                 # Web interface (Flask)
+    ├── app.py           # Flask application
+    └── templates/
+        └── index.html   # Web frontend
+```
 
-### v0.8.2
-[Release video](https://youtu.be/xMUNynQ9x6Y)
+## Supported TTS Engines
 
-- **Multitasking in terminal**
-- **Chat names**
+This application **only** uses traditional, non-neural TTS engines:
 
-### v0.8.1
-[Release video](https://youtu.be/quv145buW74)
+| Platform | Engine | Voices |
+|----------|--------|--------|
+| Windows | Microsoft SAPI5 | David, Zira, + installed voices |
+| macOS | NSSpeechSynthesizer | Alex, Samantha, + system voices |
+| Linux | espeak-ng | Various languages/accents |
 
-- **Browser Agent**
-- **UX Improvements**
+### Adding More Voices
 
-### v0.8
-[Release video](https://youtu.be/cHDCCSr1YRI)
+**Windows:**
+- Install additional SAPI5 voices from Microsoft or third parties
+- Some language packs include additional voices
 
-- **Docker Runtime**
-- **New Messages History and Summarization System**
-- **Agent Behavior Change and Management**
-- **Text-to-Speech (TTS) and Speech-to-Text (STT)**
-- **Settings Page in Web UI**
-- **SearXNG Integration Replacing Perplexity + DuckDuckGo**
-- **File Browser Functionality**
-- **KaTeX Math Visualization Support**
-- **In-chat File Attachments**
+**macOS:**
+- System Preferences → Accessibility → Spoken Content → System Voice → Manage Voices
 
-### v0.7
-[Release video](https://youtu.be/U_Gl0NPalKA)
+**Linux:**
+- Install espeak-ng language data: `sudo apt install espeak-ng-data`
 
-- **Automatic Memory**
-- **UI Improvements**
-- **Instruments**
-- **Extensions Framework**
-- **Reflection Prompts**
-- **Bug Fixes**
+## Troubleshooting
 
-## 🤝 Community and Support
+### No voices found
+- **Windows:** Ensure at least one SAPI5 voice is installed
+- **Linux:** Install espeak-ng: `sudo apt install espeak-ng`
+- **macOS:** System voices should be available by default
 
-- [Join our Discord](https://discord.gg/B8KZKNsPpj) for live discussions or [visit our Skool Community](https://www.skool.com/agent-zero).
-- [Follow our YouTube channel](https://www.youtube.com/@AgentZeroFW) for hands-on explanations and tutorials
-- [Report Issues](https://github.com/agent0ai/agent-zero/issues) for bug fixes and features
+### M4B chapters not working
+- Ensure ffmpeg is installed and in your PATH
+- The app will fall back to M4A without chapters if ffmpeg is unavailable
+
+### Audio quality issues
+- Try a different voice
+- Adjust the speed slider (150 WPM is typical for audiobooks)
+- Enable "Normalize audio volume" for consistent levels
+
+### Conversion is slow
+- TTS synthesis is CPU-bound
+- Longer books naturally take more time
+- The estimated duration shown reflects actual reading time
+
+## Technical Details
+
+### Dependencies
+
+- **ebooklib** - ePub parsing
+- **pyttsx3** - Cross-platform TTS wrapper
+- **pydub** - Audio processing
+- **mutagen** - Audio metadata (ID3, MP4 tags)
+- **PyQt6** - GUI framework
+- **BeautifulSoup4** - HTML parsing
+- **ffmpeg** (optional) - M4B chapter encoding
+
+### Text Processing
+
+The text cleaner handles:
+- Abbreviation expansion (Mr. → Mister, etc.)
+- Number to word conversion (123 → one hundred twenty three)
+- Year pronunciation (1984 → nineteen eighty four)
+- Currency formatting ($50 → fifty dollars)
+- URL and email removal
+- Footnote marker cleanup
+- Smart quote normalization
+- Punctuation handling for natural pauses
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues and pull requests.
+
+## License
+
+This project is open source and available for personal use. See LICENSE file for details.
+
+## Acknowledgments
+
+- **pyttsx3** for the excellent cross-platform TTS wrapper
+- **ebooklib** for robust ePub parsing
+- **pydub** for simple audio manipulation
+- **PyQt6** for the modern GUI framework

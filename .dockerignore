@@ -1,57 +1,49 @@
-###############################################################################
-# Project‑specific exclusions / re‑includes
-###############################################################################
+# Git
+.git
+.gitignore
 
-# Large / generated data
-memory/**
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv/
+ENV/
+env/
+.eggs/
+*.egg-info/
+*.egg
 
-# Logs, tmp, usr
-logs/*
-tmp/*
-usr/*
+# Build artifacts
+build/
+dist/
+*.spec
 
-# Knowledge directory – keep only default/
-knowledge/**
-!knowledge/default/
-!knowledge/default/**
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# Instruments directory – keep only default/
-instruments/**
-!instruments/default/
-!instruments/default/**
+# Data (mounted as volumes)
+data/
 
-# Keep .gitkeep markers anywhere
-!**/.gitkeep
+# Desktop GUI (not needed for web)
+gui/
+main.py
+build.py
 
+# Tests
+tests/
+*.test.py
 
-###############################################################################
-# Environment / tooling
-###############################################################################
-.conda/
-.cursor/
-.venv/
-.git/
+# Documentation
+*.md
+docs/
 
-
-###############################################################################
-# Tests (root‑level only)
-###############################################################################
-/*.test.py
-
-
-###############################################################################
-# ─── LAST SECTION: universal junk / caches (MUST BE LAST) ───
-#   Put these at the *bottom* so they override any ! re‑includes above
-###############################################################################
-# OS / editor junk
-**/.DS_Store
-**/Thumbs.db
-
-# Python caches / compiled artefacts
-**/__pycache__/
-**/*.py[cod]
-**/*.pyo
-**/*.pyd
-
-# Environment files anywhere
-*.env
+# Misc
+.DS_Store
+Thumbs.db
+*.log
