@@ -67,10 +67,10 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(title_label)
 
         # Subtitle showing TTS engine
-        engine_label = QLabel(f"Using: {self.tts_engine.get_engine_name()}")
-        engine_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        engine_label.setStyleSheet("color: gray; font-style: italic;")
-        main_layout.addWidget(engine_label)
+        self.engine_label = QLabel(f"Using: {self.tts_engine.get_engine_name()}")
+        self.engine_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.engine_label.setStyleSheet("color: gray; font-style: italic;")
+        main_layout.addWidget(self.engine_label)
 
         # Splitter for two-panel layout
         splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -266,6 +266,7 @@ class MainWindow(QMainWindow):
         self.preview_btn.clicked.connect(self._preview_voice)
         self.convert_btn.clicked.connect(self._start_conversion)
         self.cancel_btn.clicked.connect(self._cancel_conversion)
+        self.voice_combo.currentIndexChanged.connect(self._on_voice_changed)
 
         self.speed_slider.valueChanged.connect(
             lambda v: self.speed_label.setText(f"{v} WPM")
@@ -273,6 +274,16 @@ class MainWindow(QMainWindow):
         self.volume_slider.valueChanged.connect(
             lambda v: self.volume_label.setText(f"{v}%")
         )
+
+    def _on_voice_changed(self, index: int):
+        """Handle voice selection change."""
+        voice_id = self.voice_combo.currentData()
+        if voice_id:
+            voice = self.tts_engine.get_voice_by_id(voice_id)
+            if voice:
+                # Update engine label based on selected voice
+                self.tts_engine.configure(TTSConfig(voice_id=voice_id))
+                self.engine_label.setText(f"Using: {self.tts_engine.get_engine_name()}")
 
     def _browse_epub(self):
         """Open file dialog to select ePub."""
