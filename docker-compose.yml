@@ -8,11 +8,13 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      # Persistent storage for uploads and output
+      # Persistent storage for uploads, output, and database
       - ./data/uploads:/data/uploads
       - ./data/output:/data/output
+      - ./data/db:/data/db
     environment:
       - SECRET_KEY=${SECRET_KEY:-change-this-in-production}
+      - DATABASE_PATH=/data/db/epub2audiobook.db
       - FLASK_ENV=production
     # Resource limits (adjust based on your server)
     deploy:

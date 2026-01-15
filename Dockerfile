@@ -41,7 +41,7 @@ COPY audio/ ./audio/
 COPY web/ ./web/
 
 # Create data directories
-RUN mkdir -p /data/uploads /data/output && \
+RUN mkdir -p /data/uploads /data/output /data/db && \
     chown -R appuser:appuser /app /data
 
 # Switch to non-root user
