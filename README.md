@@ -202,7 +202,10 @@ epub2audiobook/
 │   ├── epub_parser.py   # ePub parsing and text extraction
 │   └── text_cleaner.py  # Text normalization for TTS
 ├── tts/
-│   └── engine.py        # TTS engine wrapper (pyttsx3)
+│   ├── base.py          # Abstract TTS engine base class
+│   ├── pyttsx3_engine.py # System TTS (SAPI5/espeak/NSS)
+│   ├── kokoro_engine.py # Kokoro neural TTS (optional)
+│   └── factory.py       # Engine factory and combined engine
 ├── audio/
 │   ├── processor.py     # Audio manipulation (pydub)
 │   └── m4b_creator.py   # M4B creation with chapters
@@ -217,13 +220,42 @@ epub2audiobook/
 
 ## Supported TTS Engines
 
-This application **only** uses traditional, non-neural TTS engines:
-
 | Platform | Engine | Voices |
 |----------|--------|--------|
 | Windows | Microsoft SAPI5 | David, Zira, + installed voices |
 | macOS | NSSpeechSynthesizer | Alex, Samantha, + system voices |
 | Linux | espeak-ng | Various languages/accents |
+| All Platforms | Kokoro-82M (Neural) | Heart, Bella, Adam, + 20 more (optional) |
+
+### Kokoro Neural TTS (Optional)
+
+For higher quality voices, you can optionally install Kokoro TTS:
+
+```bash
+pip install kokoro>=0.9.4 soundfile
+```
+
+On Linux, ensure espeak-ng is installed:
+```bash
+sudo apt install espeak-ng
+```
+
+Kokoro provides natural-sounding neural voices that appear alongside system voices in the voice selector. Voices are tagged with `[kokoro]` in the dropdown.
+
+**Available Kokoro Voices:**
+- American English: Heart, Bella, Nicole, Adam, Michael, and more
+- British English: Alice, Emma, Daniel, George, and more
+
+**CLI usage:**
+```bash
+# Use Kokoro voices specifically
+python main.py book.epub output.m4b --engine kokoro --voice "Heart"
+
+# List Kokoro voices
+python main.py --list-voices --engine kokoro
+```
+
+Note: Kokoro requires more CPU/memory than traditional TTS and may be slower on older hardware.
 
 ### Adding More Voices
 
