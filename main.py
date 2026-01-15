@@ -66,9 +66,21 @@ def run_cli(args):
     print(f"  Author: {parser.metadata.author}")
     print(f"  Chapters: {len(parser.chapters)}")
 
-    # Initialize TTS
+    # Initialize TTS based on engine choice
     print(f"\nInitializing TTS engine...")
-    tts = TTSEngine()
+
+    if args.engine == 'kokoro':
+        from tts import KokoroEngine, KOKORO_AVAILABLE
+        if not KOKORO_AVAILABLE:
+            print("ERROR: Kokoro not installed. Run: pip install kokoro soundfile")
+            sys.exit(1)
+        tts = KokoroEngine()
+    elif args.engine == 'pyttsx3':
+        from tts import Pyttsx3Engine
+        tts = Pyttsx3Engine()
+    else:  # auto
+        tts = TTSEngine()
+
     if not tts.initialize():
         print("ERROR: Failed to initialize TTS engine")
         sys.exit(1)
@@ -215,6 +227,9 @@ Note: For M4B with chapters, ffmpeg must be installed.
                         help='Volume 0-100 (default: 100)')
     parser.add_argument('--list-voices', action='store_true',
                         help='List available voices and exit')
+    parser.add_argument('--engine', choices=['auto', 'pyttsx3', 'kokoro'],
+                        default='auto',
+                        help='TTS engine: auto (default), pyttsx3, or kokoro')
     parser.add_argument('--gui', action='store_true',
                         help='Force GUI mode even with arguments')
 
@@ -222,13 +237,24 @@ Note: For M4B with chapters, ffmpeg must be installed.
 
     # List voices mode
     if args.list_voices:
-        from tts import TTSEngine
-        tts = TTSEngine()
+        from tts import TTSEngine, Pyttsx3Engine, KokoroEngine, KOKORO_AVAILABLE
+
+        if args.engine == 'kokoro':
+            if not KOKORO_AVAILABLE:
+                print("ERROR: Kokoro not installed. Run: pip install kokoro soundfile")
+                sys.exit(1)
+            tts = KokoroEngine()
+        elif args.engine == 'pyttsx3':
+            tts = Pyttsx3Engine()
+        else:  # auto
+            tts = TTSEngine()
+
         if tts.initialize():
             print(f"TTS Engine: {tts.get_engine_name()}")
             print(f"\nAvailable voices:")
             for v in tts.get_voices():
-                print(f"  - {v.name} ({v.gender})")
+                engine_tag = f" [{v.engine}]" if v.engine != 'pyttsx3' else ""
+                print(f"  - {v.name} ({v.gender}){engine_tag}")
             tts.cleanup()
         else:
             print("ERROR: Failed to initialize TTS engine")
