@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - ePub to Audiobook{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-area {
+        border: 2px dashed var(--border);
+        border-radius: 8px;
+        padding: 3rem 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .upload-area:hover, .upload-area.dragover {
+        border-color: var(--primary);
+        background: #f0f7ff;
+    }
+    .upload-area input { display: none; }
+    .upload-area .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    .job-list { list-style: none; }
+    .job-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        gap: 1rem;
+    }
+    .job-item:last-child { border-bottom: none; }
+    .job-info { flex: 1; min-width: 0; }
+    .job-title {
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .job-meta { font-size: 0.85rem; color: var(--text-light); }
+    .job-actions { display: flex; gap: 0.5rem; }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+    .status-queued { background: #fef3c7; color: #92400e; }
+    .status-processing { background: #dbeafe; color: #1e40af; }
+    .status-completed { background: #d1fae5; color: #065f46; }
+    .status-failed { background: #fee2e2; color: #991b1b; }
+
+    .progress-bar {
+        height: 6px;
+        background: var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: var(--primary);
+        transition: width 0.3s;
+    }
+
+    .convert-modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    .convert-modal.visible { display: flex; }
+    .modal-content {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-light);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-light);
+    }
+    .empty-state .icon { font-size: 4rem; margin-bottom: 1rem; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav class="navbar">
+        <a href="{{ url_for('dashboard') }}" class="navbar-brand">📚 ePub to Audiobook</a>
+        <div class="navbar-user">
+            <span>{{ user.username }}{% if user.is_admin %} (admin){% endif %}</span>
+            <a href="{{ url_for('logout') }}" class="btn btn-sm">Logout</a>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- Upload Section -->
+    <div class="card">
+        <h2>Upload ePub</h2>
+        <div class="upload-area" id="upload-area">
+            <input type="file" id="file-input" accept=".epub">
+            <div class="icon">📖</div>
+            <p><strong>Click to select</strong> or drag and drop</p>
+            <p class="text-light">ePub files up to 100MB</p>
+        </div>
+    </div>
+
+    <!-- Jobs List -->
+    <div class="card">
+        <h2>Your Conversions</h2>
+        {% if jobs %}
+        <ul class="job-list" id="job-list">
+            {% for job in jobs %}
+            <li class="job-item" data-job-id="{{ job.id }}">
+                <div class="job-info">
+                    <div class="job-title">{{ job.title }}</div>
+                    <div class="job-meta">
+                        {% if job.author %}{{ job.author }} &bull; {% endif %}
+                        <span class="status-badge status-{{ job.status }}">
+                            {% if job.status == 'queued' %}
+                                #{{ job.queue_position }} in queue
+                            {% else %}
+                                {{ job.status }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% if job.status == 'processing' %}
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: {{ job.progress }}%"></div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="job-actions">
+                    {% if job.status == 'completed' %}
+                    <a href="/api/download/{{ job.id }}" class="btn btn-success btn-sm">Download</a>
+                    {% endif %}
+                    <button class="btn btn-danger btn-sm" onclick="deleteJob('{{ job.id }}')">Delete</button>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">
+            <div class="icon">📚</div>
+            <p>No conversions yet. Upload an ePub to get started!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Convert Modal -->
+<div class="convert-modal" id="convert-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Convert to Audiobook</h2>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div id="book-info">
+            <p><strong>Title:</strong> <span id="book-title"></span></p>
+            <p><strong>Author:</strong> <span id="book-author"></span></p>
+            <p><strong>Chapters:</strong> <span id="book-chapters"></span></p>
+            <p><strong>Duration:</strong> <span id="book-duration"></span></p>
+        </div>
+        <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+        <div class="form-group">
+            <label for="voice-select">Voice</label>
+            <select id="voice-select"></select>
+        </div>
+        <div class="form-group">
+            <label for="speed-range">Speed: <span id="speed-value">150</span> WPM</label>
+            <input type="range" id="speed-range" min="80" max="250" value="150" style="width:100%">
+        </div>
+        <button class="btn btn-primary btn-block" id="start-convert-btn">
+            Start Conversion
+        </button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentEpubPath = null;
+    let pollInterval = null;
+
+    // Setup
+    document.addEventListener('DOMContentLoaded', () => {
+        setupUpload();
+        loadVoices();
+        startPolling();
+
+        document.getElementById('speed-range').addEventListener('input', (e) => {
+            document.getElementById('speed-value').textContent = e.target.value;
+        });
+
+        document.getElementById('start-convert-btn').addEventListener('click', startConversion);
+    });
+
+    function setupUpload() {
+        const area = document.getElementById('upload-area');
+        const input = document.getElementById('file-input');
+
+        area.addEventListener('click', () => input.click());
+        area.addEventListener('dragover', (e) => { e.preventDefault(); area.classList.add('dragover'); });
+        area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+        area.addEventListener('drop', (e) => {
+            e.preventDefault();
+            area.classList.remove('dragover');
+            if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+        });
+        input.addEventListener('change', (e) => {
+            if (e.target.files[0]) handleFile(e.target.files[0]);
+        });
+    }
+
+    async function handleFile(file) {
+        if (!file.name.endsWith('.epub')) {
+            alert('Please select an ePub file');
+            return;
+        }
+
+        const area = document.getElementById('upload-area');
+        area.innerHTML = '<p>Uploading...</p>';
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+
+            if (data.error) throw new Error(data.error);
+
+            currentEpubPath = data.epub_path;
+            document.getElementById('book-title').textContent = data.title;
+            document.getElementById('book-author').textContent = data.author;
+            document.getElementById('book-chapters').textContent = data.chapters;
+            document.getElementById('book-duration').textContent = data.estimated_duration;
+
+            document.getElementById('convert-modal').classList.add('visible');
+
+            area.innerHTML = `
+                <input type="file" id="file-input" accept=".epub">
+                <div class="icon">📖</div>
+                <p><strong>Click to select</strong> or drag and drop</p>
+                <p class="text-light">ePub files up to 100MB</p>
+            `;
+            setupUpload();
+
+        } catch (err) {
+            alert('Upload failed: ' + err.message);
+            area.innerHTML = `
+                <input type="file" id="file-input" accept=".epub">
+                <div class="icon">📖</div>
+                <p><strong>Click to select</strong> or drag and drop</p>
+            `;
+            setupUpload();
+        }
+    }
+
+    async function loadVoices() {
+        try {
+            const res = await fetch('/api/voices');
+            const data = await res.json();
+            const select = document.getElementById('voice-select');
+            select.innerHTML = '';
+
+            if (data.kokoro_voices && data.kokoro_voices.length > 0) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = 'Neural Voices (Kokoro)';
+                data.kokoro_voices.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.id;
+                    opt.textContent = (v.gender === 'female' ? '♀ ' : '♂ ') + v.name;
+                    optgroup.appendChild(opt);
+                });
+                select.appendChild(optgroup);
+            }
+
+            if (data.system_voices && data.system_voices.length > 0) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = 'System Voices';
+                data.system_voices.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.id;
+                    opt.textContent = (v.gender === 'female' ? '♀ ' : '♂ ') + v.name;
+                    optgroup.appendChild(opt);
+                });
+                select.appendChild(optgroup);
+            }
+        } catch (err) {
+            console.error('Failed to load voices', err);
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('convert-modal').classList.remove('visible');
+        currentEpubPath = null;
+    }
+
+    async function startConversion() {
+        if (!currentEpubPath) return;
+
+        try {
+            const res = await fetch('/api/convert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    epub_path: currentEpubPath,
+                    voice_id: document.getElementById('voice-select').value,
+                    speed: parseInt(document.getElementById('speed-range').value)
+                })
+            });
+
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+
+            closeModal();
+            location.reload();
+
+        } catch (err) {
+            alert('Failed to start conversion: ' + err.message);
+        }
+    }
+
+    async function deleteJob(jobId) {
+        if (!confirm('Delete this job?')) return;
+
+        try {
+            await fetch(`/api/jobs/${jobId}`, { method: 'DELETE' });
+            location.reload();
+        } catch (err) {
+            alert('Failed to delete job');
+        }
+    }
+
+    function startPolling() {
+        // Poll for job updates every 3 seconds
+        pollInterval = setInterval(async () => {
+            const processingJobs = document.querySelectorAll('.job-item .status-processing');
+            const queuedJobs = document.querySelectorAll('.job-item .status-queued');
+
+            if (processingJobs.length > 0 || queuedJobs.length > 0) {
+                location.reload();
+            }
+        }, 3000);
+    }
+</script>
+{% endblock %}
