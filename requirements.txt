@@ -7,6 +7,11 @@ ebooklib>=0.18
 # Text-to-Speech (wraps SAPI5/espeak-ng/NSSpeechSynthesizer)
 pyttsx3>=2.90
 
+# Neural TTS (optional - for high-quality voices)
+# Requires espeak-ng on Linux: sudo apt install espeak-ng
+kokoro>=0.9.4
+soundfile
+
 # Audio processing
 pydub>=0.25.1
 
