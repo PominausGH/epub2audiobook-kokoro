@@ -117,6 +117,7 @@ def init_db():
 
 def create_user(username: str, email: str, password: str) -> Optional[User]:
     """Create a new user. First user becomes admin."""
+    user_id = None
     with get_db() as conn:
         # Check if first user
         count = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
@@ -130,9 +131,14 @@ def create_user(username: str, email: str, password: str) -> Optional[User]:
                    VALUES (?, ?, ?, ?)""",
                 (username, email, password_hash, is_admin)
             )
-            return get_user_by_id(cursor.lastrowid)
+            user_id = cursor.lastrowid
         except sqlite3.IntegrityError:
             return None
+
+    # Fetch user after commit
+    if user_id:
+        return get_user_by_id(user_id)
+    return None
 
 
 def get_user_by_id(user_id: int) -> Optional[User]:
