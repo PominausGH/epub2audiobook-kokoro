@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Build dependencies
     gcc \
     python3-dev \
+    # Health check
+    curl \
     # Cleanup
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
